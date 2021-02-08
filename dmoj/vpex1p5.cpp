@@ -1,127 +1,116 @@
-#include <bits/stdc++.h>
-//#pragma GCC optimize("Ofast")
-#define fori(a,b) for(__typeof(a) i=a,ENDI=b;i<ENDI;i++)
-#define forj(a,b) for(__typeof(a) j=a,ENDJ=b;j<ENDJ;j++)
-#define fork(a,b) for(__typeof(a) k=a,ENDK=b;k<ENDK;k++)
-#define foru(i,a,b) for(__typeof(a) i=a;i<b;i++)
-#define ford(i,a,b) for(__typeof(a) i=a;i>=b;i--)
-#define seto(x,i) memset(x,i,sizeof x)
-#define inf 0x3f3f3f3f
-#define INF 0x3f3f3f3f3f3f3f3f
-#define pf first
-#define ps second
-#define pb push_back
-#define popcount __builtin_popcount
-#define popcountll __builtin_popcount
-#define clz __builtin_clz
-#define clzll __builtin_clz
-#define ctz __builtin_ctz
-#define ctzll __builtin_ctz
-#define pow2(x) (1LL<<(x))
-using namespace std;
-#if __SIZEOF_INT128__
-    typedef __int128_t i128; typedef __uint128_t ui128;
-#else
-    typedef long long i128; typedef long long ui128;
-#endif
-typedef long long ll; typedef int8_t byte; typedef long double lld;
-typedef pair<int,int> pii;
-inline ll gcd(ll a, ll b){return b==0?a:gcd(b,a%b);}
-inline ll fpow(ll a,ll b){if(b==0) return 1; ll t=fpow(a,b/2); if(b&1) return t*t%1000000007*a%1000000007; return t*t%1000000007;}
-mt19937 randgen(time(0)); inline int randint(int a, int b){return uniform_int_distribution<int>(a,b)(randgen);} inline ll randll(ll a, ll b){return uniform_int_distribution<ll>(a,b)(randgen);}
-template<class T>constexpr const T&_min(const T&x,const T&y){return x<y?x:y;} template<class T>constexpr const T&_max(const T&x,const T&y){return x<y?y:x;}
-template<class T,class...Ts>constexpr const T&_min(const T&x,const Ts&...xs){return _min(x,_min(xs...));} template<class T,class...Ts>constexpr const T&_max(const T&x,const Ts&...xs){return _max(x,_max(xs...));}
-#define min(...) _min(__VA_ARGS__)
-#define max(...) _max(__VA_ARGS__)
-struct pair_hash{
-    template<class T1,class T2>
-    size_t operator()(const pair<T1,T2>&pair)const{return 31*hash<T1>{}(pair.first)+hash<T2>{}(pair.second);}
-};
-
-struct query
-{
-    int l,r,t,i;
-};
-const int N=10010,M=101,Q=100010;
-int n,q,a,b,c,w[N],v[N],dp[N][M],ans[Q];
-ll t;
-
-void go(int l,int r,vector<query> que)
-{
-    if(l>r||que.empty())
-        return;
-    int m=(l+r)/2;
-    fori(w[m],M)
-        dp[m][i]=v[m];
-    if(l==r)
-    {
-        for(auto i:que)
-            ans[i.i]=dp[m][i.t];
-        return;
-    }
-    ford(i,m-1,l)
-    {
-        forj(0,M)
-            dp[i][j]=dp[i+1][j];
-        forj(w[i],M)
-            dp[i][j]=max(dp[i][j],dp[i+1][j-w[i]]+v[i]);
-    }
-    fori(w[m+1],M)
-        dp[m+1][i]=v[m+1];
-    fori(m+2,r+1)
-    {
-        forj(0,M)
-            dp[i][j]=dp[i-1][j];
-        forj(w[i],M)
-            dp[i][j]=max(dp[i][j],dp[i-1][j-w[i]]+v[i]);
-    }
-    vector<query> lv,rv;
-    for(auto i:que)
-    {
-        if(i.l>m+1)
-            rv.pb(i);
-        else if(i.r<m)
-            lv.pb(i);
-        if(i.l<=m+1&&i.r>=m)
-        {
-            if(i.l==m+1)
-                ans[i.i]=dp[i.r][i.t];
-            else if(i.r==m)
-                ans[i.i]=dp[i.l][i.t];
-            else
-                forj(0,i.t+1)
-                    ans[i.i]=max(ans[i.i],dp[i.l][j]+dp[i.r][i.t-j]);
-        }
-    }
-    fori(l,r+1)
-        forj(0,M)
-            dp[i][j]=0;
-    go(l,m,lv);
-    go(m+1,r,rv);
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    //freopen("in1.txt", "r", stdin); //freopen("", "w", stdout);
-    vector<query> que; seto(ans,-inf);
-    cin>>n;
-    fori(1,n+1)
-        cin>>w[i]>>v[i];
-    cin>>q;
-    fori(0,q)
-    {
-        cin>>a>>b>>c;
-        que.pb({a,b,c,i});
-    }
-    go(1,n,que);
-    fori(0,q)
-        t+=ans[i];
-    //fori(0,q)
-        //cout<<ans[i]<<"\n";
-    cout<<t;
-    return 0;
-}
-/**
-
+#include <bits/stdc++.h>
+#define fori(a,b) for(int i=a;i<b;i++)
+#define forj(a,b) for(int j=a;j<b;j++)
+#define fork(a,b) for(int k=a;k<b;k++)
+#define ford(i,a,b) for(int i=a;i>=b;i--)
+
+using namespace std;
+
+struct cls
+{
+    int l,r,t,i;
+};
+bool cmp(cls a,cls b)
+{
+    if(a.r==b.r)
+        return a.l<b.l;
+    return a.r<b.r;
+}
+
+const int N=10010,B=101;
+int n,q,s[N],v[N],x,y,z,l,r,up[N][B],down[N][B],ans[N*10];
+long long t;
+vector<cls> big,smol;
+
+int main()
+{
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    //freopen("in7.txt", "r", stdin);
+    //freopen("out7.txt", "w", stdout);
+    cin>>n;
+    fori(0,n)
+    {
+        cin>>s[i]>>v[i];
+    }
+    cin>>q; //q=2585;
+    fori(0,q)
+    {
+        cin>>x>>y>>z; x--; y--;
+        //if(i<2580) continue;
+        if(y-x>=B)
+            big.push_back({x,y,z,i});
+        else
+            smol.push_back({x,y,z,i});
+    }
+    sort(smol.begin(),smol.end(),cmp); sort(big.begin(),big.end(),cmp);
+    l=r=-1;
+    for(auto i:big)
+    {
+        if(i.l>r)
+        {
+            forj(0,B)
+                up[i.r][j]=down[i.r+1][j]=0;
+            forj(i.r+1,n)
+                fork(1,B)
+                {
+                    up[j][k]=max(up[j][k-1],up[j-1][k]);
+                    if(k>=s[j])
+                        up[j][k]=max(up[j][k],up[j-1][k-s[j]]+v[j]);
+                }
+            ford(j,i.r,0)
+                fork(1,B)
+                {
+                    down[j][k]=max(down[j][k-1],down[j+1][k]);
+                    if(k>=s[j])
+                        down[j][k]=max(down[j][k],down[j+1][k-s[j]]+v[j]);
+                }
+            r=i.r;
+        }
+        x=0;
+        forj(0,i.t+1)
+        {
+            x=max(x,down[i.l][j]+up[i.r][i.t-j]);
+        }
+        ans[i.i]=x;
+        t+=x;
+    }
+    l=r=-1;
+    for(auto i:smol)
+    {
+        if(i.l>r)
+        {
+            forj(0,B)
+                up[i.r][j]=down[i.r+1][j]=0;
+            forj(i.r+1,min(n,i.r+B))
+                fork(1,B)
+                {
+                    up[j][k]=max(up[j][k-1],up[j-1][k]);
+                    if(k>=s[j])
+                        up[j][k]=max(up[j][k],up[j-1][k-s[j]]+v[j]);
+                }
+            ford(j,i.r,max(0,i.r-B))
+                fork(1,B)
+                {
+                    down[j][k]=max(down[j][k-1],down[j+1][k]);
+                    if(k>=s[j])
+                        down[j][k]=max(down[j][k],down[j+1][k-s[j]]+v[j]);
+                }
+            r=i.r;
+        }
+        x=0;
+        forj(0,i.t+1)
+        {
+            x=max(x,down[i.l][j]+up[i.r][i.t-j]);
+        }
+        ans[i.i]=x;
+        t+=x;
+    }
+    //fori(0,q)
+      //  cout<<ans[i]<<"\n";
+    cout<<t<<endl;
+    return 0;
+}
+/**
+331542571
+332200013
 */
