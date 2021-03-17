@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1613966096 source:c:\new folder 3\usaco17febplat1\main.cpp
+	<bits/stdc++.h>
+	<ext/pb_ds/assoc_container.hpp>
+	<ext/pb_ds/tree_policy.hpp>
+	<ext/pb_ds/priority_queue.hpp>
+
+1614003059 source:c:\f3\usaco17febplat1\main.cpp
+	<bits/stdc++.h>
+	<ext/pb_ds/assoc_container.hpp>
+	<ext/pb_ds/tree_policy.hpp>
+	<ext/pb_ds/priority_queue.hpp>
+
